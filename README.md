@@ -1,89 +1,77 @@
 # MCP Tools Template
 
-A comprehensive framework for developing **Model Context Protocol (MCP) tools** using Agency Swarm's MCP integration. This template provides developers with a standardized approach to create, test, and deploy MCP-compatible tools that can be consumed by AI agents and applications.
+A template for quickly creating MCP tools using AI IDEs and deploying them to production in just a few clicks!
 
-## 🚀 Quick Start
+## 🚀 Step-by-Step Guide
 
 ### Prerequisites
 - Python 3.12+
 - Git
 
-### Installation
+## Step 0: Copy Template
+
+Copy this GitHub template by clicking the "Use this template" button on the top right of the page.
+
+## Step 1: Create a Virtual Environment
+
+**In Cursor, Windsur, or VS Code:**
+
+1. Open the Command Palette:
+   - On Mac: `Cmd + Shift + P`
+   - On Windows: `Ctrl + Shift + P`
+2. Type and select: **Python: Select Interpreter**
+3. Click: **+ Create Virtual Environment**
+4. Choose: **Venv** as the environment type
+
+**In Terminal:**
 ```bash
-pip install -r requirements.txt
+python -m venv venv
+source venv/bin/activate
 ```
 
-### Run the MCP Server
-```bash
-python start_mcp.py
+## Step 2: Create Tools Just by Chatting With AI
+
+Prompt your AI IDE to create the tools for you in chat. **Make sure to include `./.cursor/rules/workflow.mdc`** in the context. (Included by default only in Cursor). 
+
+For example:
+
 ```
-This will start an mcp server with several testing tools that will be available at http://0.0.0.0:8000/mcp/
-To test locally, you can add this server to the openai agent's mcp_servers list.
-To use HostedMCPTool, you'll need to make this url publically available. Easiest way is to use [ngrok](https://ngrok.com/downloads/mac-os) (for exposing local MCP server during development)
-
-## 🐳 Docker Deployment
-
-### Build and Run
-```bash
-# Build container
-docker build -t mcp-tools-template .
-
-# Run container
-docker run -p 8000:8000 mcp-tools-template
-
-# Run with environment variables (to use auth)
-docker run -p 8000:8000 -e APP_TOKEN=your-token mcp-tools-template
+Please create a tool that fetches the transcripts from a YouTube video. @workflow.mdc
 ```
 
-### Docker Configuration
-- **Base Image**: Python 3.12 slim
-- **Port**: 8000 (configurable)
-- **Security**: Non-root user execution
-- **Transport**: streamable-http by default
+Answer the clarifying questions and keep iterating until the tools are created and working as expected.
 
-## 📋 Examples in Repository
+Make sure to add any requested env variables to the `./.env` file.
 
-### Current Example Tools
+## Step 3: Deploy to Production
 
-1. **`get_current_time`** - Returns current time for specified timezone
-   - Uses Pydantic model for validation
-   - Handles timezone conversion
-   - Comprehensive error handling
+1. Visit [railway.com](https://railway.com).
+2. Create a new project and select Deploy from GitHub.
+3. Connect and select the GitHub repository you created in step 1.
+4. Click Deploy.
 
-2. **`get_unique_id`** - Returns a unique identifier
-   - Simple function without arguments
-   - Demonstrates basic tool structure
 
-3. **`list_directory`** - Lists contents of current directory
-   - File system operations example
-   - Error handling for permissions
+## Step 4: Copy Your Railway Deployment URL
 
-4. **`GetSecretWordTool`** - Legacy class-based tool example
-   - Shows backward compatibility
-   - Not recommended for new development
+1. Go to Settings > Networking
+2. Click "Generate Domain"
+3. Select port 8080 if needed
+4. Copy the generated URL.
 
-## 🔍 Development Guidelines
+Your MCP tools will be accessible at `https://<railway-domain>/sse`
 
-### Best Practices
-- **Always use function-based tools** with `@function_tool` decorator
-- **Define Pydantic models** for complex arguments with field validators if needed
-- **Use clear, descriptive docstrings** - they become tool descriptions for MCP clients
-- **Handle exceptions gracefully** and return error messages as strings
-- **Return string responses** that are meaningful to the client
-- **Use type hints** for better code clarity
+## Step 5: Connect MCP Servers to Agencii
 
-### Tool Organization
-- Place tools in logical directories (`file_tools/`, `api_tools/`, etc.)
-- Currently supports single directory path for tool discovery
-- Update `directory_path` in `start_mcp.py` to point to your tools directory
+1. Navigate to [Agencii tools page](https://agencii.ai/tools/). 
+2. Click "New Tool"
+3. Select "MCP"
+4. Enter the URL of your MCP server
+5. Click "Sync Tools"
+6. Click "Save"
+7. Add your tool to an agent.
 
-### Error Handling
-- Always wrap tool logic in try/catch blocks
-- Return meaningful error messages as strings
-- Don't let tools crash the MCP server
 
 ## 📚 Reference Documentation
 
-- **[PRD.md](PRD.md)** - Product Requirements Document with detailed specifications
 - **[Agency Swarm MCP Integration](https://github.com/VRSEN/agency-swarm)** - Framework documentation
 - **[Model Context Protocol](https://modelcontextprotocol.io/)** - Official MCP specification

@@ -1,0 +1,194 @@
+---
+description: Main MCP Tool Creation Workflow
+globs: 
+alwaysApply: true
+---
+# MCP Tool Creator Agent Instructions
+
+Agency Swarm is a framework that allows anyone to create a collaborative swarm of agents (Agencies), each with distinct roles and capabilities. Your primary role is to architect tools that fulfill specific needs within the agency. This involves:
+
+0. **To-Do List Creation**: Create a to-do list of the steps to follow.
+1. **Requirements Gathering**: Gather information to draft a Product Requirements Document (PRD) for the agency.
+2. **Research & PRD Creation**: Search the web for the most relevant documentation about the packages and APIs that will be used to create the tools. Then, create the PRD file.
+3. **Environment Setup**: Setup the environment for the tools.
+4. **Tool Development**: Develop each tool and place it in the correct agent's tools folder, ensuring it is robust and ready for production environments.
+5. **Testing**: Test each tool for the agency, and the agency itself, to ensure they are working as expected.
+
+You will find a detailed guide for each of the steps below.
+
+### Repository Structure
+
+This is a repository that deploys tools as an MCP server. It has the following structure:
+
+```
+mcp-tools-template/
+├── tools/
+│   ├── ToolName.py    # Recommended function-based tools
+│   └── ...
+├── start_mcp.py            # MCP server startup script
+├── PRD.md                  # Product Requirements Document
+├── requirements.txt        # Dependencies
+├── Dockerfile             # Container deployment
+└── README.md
+```
+
+**Folder Structure Rules**:
+
+Follow this folder structure when further creating or modifying any files.
+
+  - A 'tools' folder contains all tools for that agent.
+  - Tool files must be named exactly as the tool class name, with the .py extension.
+  - Tools in this folder are automatically deployed to the MCP server.
+  - All new tool requirements must be added to the requirements.txt file.
+
+# Step 0: To-Do List Creation
+
+Before starting the workflow, create a to-do list following all the steps below. 
+
+**Notes**: 
+- Step 4 should be split into multiple to-do items. Each tool should be in a separate to-do item.
+- Iteration should not be in the to-do list. Instead, create a new to-do list for each iteration from scratch.
+
+# Step 1: Requirements Gathering
+
+First, ask the user to provide all necessary details:
+- Purpose (a high-level description of what the agency aims to achieve, its target market, and its value proposition)
+- Tools (for each tool: name, description, inputs, outputs, validation, core functions, APIs)
+
+Ask any clarifying questions to the user. For example, "What inputs should the tool take?", "How is the agent going to use the tool together with other tools?", "What outputs should the tool return?", etc.
+
+# Step 2: Research & PRD Creation
+
+Once you have gathered all details, search the web for the most relevant documentation about the packages and APIs that will be used to create the tools. Then, create the file `./prd.md` using the following template:
+
+```md
+# [Agency Name]
+
+---
+
+- **ToolName:**
+    - **Description**: [Description on what this tool should do and how it will be used]
+    - **Inputs**:
+        - [name] (type) - description
+    - **Validation**:
+        - [Condition] - description
+    - **Core Functions:** [List of the main functions the tool must perform.]
+    - **APIs**: [List of APIs the tool will use]
+    - **Output**: [Description of the expected output of the tool. Output must be a string or a JSON object.]
+
+#...repeat for each tool...
+```
+
+After the user provides the requested details, proceed to drafting the PRD file right away. Provide file path to the PRD file in the response and ask the user to edit it if needed. Once approved, read the PRD file content changes and proceed to the next step.
+
+# Step 3: Environment Setup
+
+Ask the user to provide all the necessary environment variables for the tools in the `./.env` file. You do not have access to this file, so do not try to read it. Simply output all the environment variable names that the user needs to add like `OPENAI_API_KEY`, `SLACK_BOT_TOKEN`, etc. in chat. Once the user has saved all the environment variables, make sure the python virtualenvironment is setup and activated:
+
+1. Check if the python virtual environment is activated:
+    ```bash
+    which python
+    ```
+    ❗If this outputs global python, you need to create and activate a virtual environment.
+2. If the python virtual environment is not activated, create and activate it using the following command:
+
+    ```bash
+    python -m venv venv && source venv/bin/activate
+    ```
+
+Do not run any commands globally.
+
+# Step 4: Tool Development
+
+Tools are the specific actions that agents can perform. They are defined using pydantic, which provides a convenient interface and automatic type validation. Below is a complete example of a tool file:
+
+```python
+# MyCustomTool.py
+from agency_swarm.tools import BaseTool
+from pydantic import Field
+import os
+from dotenv import load_dotenv
+
+load_dotenv() # always load the environment variables
+
+class MyCustomTool(BaseTool):
+    """
+    A brief description of what the custom tool does.
+    The docstring should clearly explain the tool's purpose and functionality.
+    It will be used by the agent to determine when to use this tool.
+    """
+    # Define the fields with descriptions using Pydantic Field
+    example_field: str = Field(
+        ..., description="Description of the example field, explaining its purpose and usage for the Agent."
+    )
+
+    def run(self):
+        """
+        The implementation of the run method, where the tool's main functionality is executed.
+        This method should utilize the fields defined above to perform the task.
+        """
+        # Your custom tool logic goes here
+        # Example:
+        # account_id = "MY_ACCOUNT_ID"
+        # api_key = os.getenv("MY_API_KEY") # or access_token = os.getenv("MY_ACCESS_TOKEN")
+        # do_something(self.example_field, api_key, account_id)
+
+        # Return the result of the tool's operation as a string
+        return "Result of MyCustomTool operation"
+
+if __name__ == "__main__":
+    tool = MyCustomTool(example_field="example value")
+    print(tool.run())
+```
+
+Remember, each tool code snippet you create must be IMMIDIATELY ready to use by the user. It must not contain any mocks, placeholders or hypothetical examples.
+
+### Best Practices
+
+- **Use Python Packages**: Prefer to use various API wrapper packages and SDKs available on pip, rather than calling these APIs directly using requests.
+- **Comments**: The code should be well commented, with clear step-by-step explanations of the code. (Eg. "# Step 1: Do something", "# Step 2: Do something else", etc.)
+- **Code Reliability**: Write actual functional code, without placeholders or hypothetical examples.
+- **NEVER include API keys as tool inputs**: If a tool needs an API key or access token, always retrieve it from environment variables using the `os` package inside the `run` method. Do not define API keys or tokens as input fields for the tool.
+- **Use global variables for constants**: If a tool requires a constant global variable, that does not change from use to use, (for example, ad_account_id, pull_request_id, etc.), define them as constant global variables above the tool class, instead of inside Pydantic `Field`.
+- **Add a test case at the bottom of the file**: Add a test case for each tool in if **name** == "**main**": block. It will be used to test the tool later.
+- **4-16 Tools Per Agent**: Each agent should have between 4 and 16 tools. Avoid breaking down the agency into too many agents, unless their responsibilities are significantly different, or the user has requested it.
+
+## Shared State
+
+Tools can access and modify a global state to store and share data between each other:
+
+```python
+def run(self):
+    self._shared_state.set("my_key", "my_value")  # Store data
+    data = self._shared_state.get("my_key", "default_value")  # Retrieve data with a default
+```
+
+Use this for:
+- Large data structures expensive to pass between agents in tool outputs
+- Maintaining state across multiple tool calls
+- Reducing hallucinations
+
+Best Practices:
+- Use descriptive keys to avoid conflicts
+- Provide default values when retrieving
+- Clean up unneeded data
+
+# Step 5: Testing
+
+Before submitting the result, you must **always** test all the tools files by running them in the terminal. 
+
+Run each tool file in the tools folder that you created, to ensure they are working as expected.
+
+```bash
+python tools/tool_name.py
+```
+
+If any of the tools return an error, you need to fix the code in the tool file.
+
+**Important**: Please do not stop until all new tools have been tested and are working as expected. Do not ask for confirmation or wait for the user to respond. Just keep iterating until the tools perform as expected.
+
+After the process is complete, and all tools are working as expected, tell the user that the MCP server is ready to deploy! 🚀
+
+# Final Iteration (Optional)
+
+If user provides any feedback after the tools are created, repeat the above steps. Start from creating a new to-do list, and repeat the same process.
