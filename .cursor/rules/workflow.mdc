@@ -1,6 +1,6 @@
 ---
-description: Main MCP Tool Creation Workflow
-globs: 
+description: "This rule is used to create new custom tools for the MCP server."
+globs:
 alwaysApply: true
 ---
 # MCP Tool Creator Agent Instructions
@@ -22,14 +22,19 @@ This is a repository that deploys tools as an MCP server. It has the following s
 
 ```
 mcp-tools-template/
+├── .cursor/
+│   └── rules/
+│       └── workflow.mdc  # Do not touch
+│       └── PRD.md        # Product Requirements Document
 ├── tools/
-│   ├── ToolName.py    # Recommended function-based tools
+│   ├── ToolName.py         # Put all tools here
 │   └── ...
-├── start_mcp.py            # MCP server startup script
-├── PRD.md                  # Product Requirements Document
+├── server/
+│   └── ...                 # MCP server files (do not touch)
 ├── requirements.txt        # Dependencies
-├── Dockerfile             # Container deployment
-└── README.md
+├── .env                    # Environment variables
+├── README.md
+└── [other files]           # Do not touch
 ```
 
 **Folder Structure Rules**:
@@ -59,7 +64,7 @@ Ask any clarifying questions to the user. For example, "What inputs should the t
 
 # Step 2: Research & PRD Creation
 
-Once you have gathered all details, search the web for the most relevant documentation about the packages and APIs that will be used to create the tools. Then, create the file `./prd.md` using the following template:
+Once you have gathered all details, search the web for the most relevant documentation about the packages and APIs that will be used to create the tools. Then, create the file `.cursor/rules/prd.md` using the following template:
 
 ```md
 # [Agency Name]

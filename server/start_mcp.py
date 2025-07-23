@@ -10,10 +10,10 @@ def setup_uvicorn_app():
     app = fastmcp.http_app(stateless_http=True, transport="sse")
     return app
 
-app = setup_uvicorn_app()
+# app = setup_uvicorn_app()
 
 if __name__ == "__main__":
     # Preferred way of running the app
-    run_mcp(tools=directory_path, transport="sse", host="0.0.0.0", port=8080)
+    run_mcp(tools=directory_path, transport="sse", host="0.0.0.0", port=8000)
     # Or you can use uvicorn instead
-    # uvicorn.run(app, host="0.0.0.0", port=8080)   
+    # uvicorn.run(app, host="0.0.0.0", port=8000)   

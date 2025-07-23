@@ -5,6 +5,7 @@ from agency_swarm import BaseTool
 
 # Legacy tool example (not recommended)
 class GetSecretWordTool(BaseTool):
+    """test tool"""
     seed: int = Field(..., description="The seed for the random number generator")
 
     def run(self) -> str:
