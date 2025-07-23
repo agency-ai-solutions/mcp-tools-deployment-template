@@ -1,6 +1,11 @@
 # MCP Tools Template
 
-A template for quickly creating MCP tools using AI IDEs and deploying them to production in just a few clicks!
+A template for quickly creating and deploying your own MCP servers. It allows you to:
+
+1. Quickly create completely custom MCP server just by chatting with AI IDEs.
+2. Add pre-built open source MCP servers to your project from MCP marketplaces.
+
+This template deployes all of them at once on railway in just a few clicks! 
 
 ## 🚀 Step-by-Step Guide
 
@@ -31,7 +36,7 @@ source venv/bin/activate
 
 ## Step 2: Create Your Tools 
 
-### Create Custom Tools Just by Chatting With AI
+### 2.1 Create Custom Tools Just by Chatting With AI
 
 Prompt your AI IDE to create the tools for you in chat. **Make sure to include `./.cursor/rules/workflow.mdc`** in the context. (Included by default only in Cursor). 
 
@@ -45,7 +50,7 @@ Answer the clarifying questions and keep iterating until the tools are created a
 
 Make sure to add any requested env variables to the `./.env` file.
 
-### Use Pre Build Open Source Stdio MCP Servers
+### 2.2 Add Pre Build Open Source Stdio MCP Servers
 
 Add other pre-built Open Source Stdio MCP servers to the `mcp.json` file, similarly to Cursor and other clients.
 
@@ -70,7 +75,7 @@ Add other pre-built Open Source Stdio MCP servers to the `mcp.json` file, simila
 
 You can use both npx and uv to run these servers.
 
-## Step 2.1: Test the MCP Servers (Optional)
+### 2.3 Test the MCP Servers (Optional)
 
 Run the following command to test the MCP servers and ensure all of them are running.
 
@@ -92,6 +97,8 @@ This step is not necessary. As long as there are no issues in your tools,
 4. Click Deploy.
 
 In case of issues, you can check logs on railway by clicking on the latest deployment and then clicking on the "Logs" tab.
+
+This template will keep your servers cold, so you are not paying for anything when not using them!
 
 
 ## Step 4: Copy Your Railway Deployment URL
@@ -123,6 +130,9 @@ https://<railway-domain>/example-mcp-server/sse
 5. Click "Sync Tools"
 6. Click "Save"
 7. Add your tool to an agent.
+
+
+We recommend copying this template again and repeating the process for each new project/client.
 
 ---
 
