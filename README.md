@@ -1,4 +1,4 @@
-# MCP Tools Template
+# MCP Tools Deployment Template 
 
 A template for quickly creating and deploying your own MCP servers. It allows you to:
 
