@@ -1,2 +1,1 @@
-# TODO: replace with agency-swarm>=1.0.0-beta after the merge
-git+https://github.com/bonk1t/agency-swarm.git@artemii/run_mcp-implementation
+agency-swarm>=1.0.0-beta.5
